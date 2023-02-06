@@ -6,7 +6,7 @@ import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 interface ClientRepository {
-    suspend fun getClient(id: Int): Client
+//    suspend fun getClient(id: Int): Client
 
     fun getClients(): Flow<List<Client>>
 
@@ -18,9 +18,9 @@ interface ClientRepository {
 }
 
 class ClientRepositoryImpl(private val clientDao: ClientDao) : ClientRepository {
-    override suspend fun getClient(id: Int): Client {
-        return clientDao.getClient(id)
-    }
+//    override suspend fun getClient(id: Int): Client {
+//        return clientDao.getClient(id)
+//    }
 
     override fun getClients(): Flow<List<Client>> {
         return clientDao.getClients()

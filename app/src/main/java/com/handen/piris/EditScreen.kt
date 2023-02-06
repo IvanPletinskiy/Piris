@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Checkbox
@@ -33,7 +35,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import javax.net.ssl.KeyStoreBuilderParameters
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -56,6 +65,8 @@ fun EditScreen(viewModel: MainViewModel) {
             Modifier
                 .verticalScroll(rememberScrollState())
                 .padding(it)
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .wrapContentHeight()
         ) {
             val client = viewModel.client.collectAsState().value
             val errors = viewModel.uiErrors.collectAsState().value
@@ -64,9 +75,12 @@ fun EditScreen(viewModel: MainViewModel) {
             OutlinedTextField(value = client.name,
                 onValueChange = viewModel::onNameChanged,
                 isError = errors.nameError != null,
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Words, keyboardType = KeyboardType.Text
+                ),
                 label = {
                     Text(
-                        text = errors.nameError.orEmpty()
+                        color = Color.Red, text = errors.nameError.orEmpty()
                     )
                 })
             Spacer(modifier = Modifier.height(16.dp))
@@ -74,9 +88,12 @@ fun EditScreen(viewModel: MainViewModel) {
             OutlinedTextField(value = client.surname,
                 onValueChange = viewModel::onSurnameChanged,
                 isError = errors.surnameError != null,
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Words, keyboardType = KeyboardType.Text
+                ),
                 label = {
                     Text(
-                        text = errors.surnameError.orEmpty()
+                        color = Color.Red, text = errors.surnameError.orEmpty()
                     )
                 })
             Spacer(modifier = Modifier.height(16.dp))
@@ -84,9 +101,12 @@ fun EditScreen(viewModel: MainViewModel) {
             OutlinedTextField(value = client.patronymic,
                 onValueChange = viewModel::onPatronymicChanged,
                 isError = errors.patronymicError != null,
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Words, keyboardType = KeyboardType.Text
+                ),
                 label = {
                     Text(
-                        text = errors.patronymicError.orEmpty()
+                        color = Color.Red, text = errors.patronymicError.orEmpty()
                     )
                 })
             Spacer(modifier = Modifier.height(16.dp))
@@ -94,9 +114,12 @@ fun EditScreen(viewModel: MainViewModel) {
             OutlinedTextField(value = client.birthday,
                 onValueChange = viewModel::onBirthdayChanged,
                 isError = errors.birthdayError != null,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text
+                ),
                 label = {
                     Text(
-                        text = errors.birthdayError.orEmpty()
+                        color = Color.Red, text = errors.birthdayError.orEmpty()
                     )
                 })
             Spacer(modifier = Modifier.height(16.dp))
@@ -104,9 +127,13 @@ fun EditScreen(viewModel: MainViewModel) {
             OutlinedTextField(value = client.passportSeries,
                 onValueChange = viewModel::onPassportSeriesChanged,
                 isError = errors.passportSeriesError != null,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    capitalization = KeyboardCapitalization.Characters
+                ),
                 label = {
                     Text(
-                        text = errors.passportSeriesError.orEmpty()
+                        color = Color.Red, text = errors.passportSeriesError.orEmpty()
                     )
                 })
             Spacer(modifier = Modifier.height(16.dp))
@@ -114,9 +141,12 @@ fun EditScreen(viewModel: MainViewModel) {
             OutlinedTextField(value = client.passportNumber,
                 onValueChange = viewModel::onPassportNumberChanged,
                 isError = errors.passportNumberError != null,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                ),
                 label = {
                     Text(
-                        text = errors.passportNumberError.orEmpty()
+                        color = Color.Red, text = errors.passportNumberError.orEmpty()
                     )
                 })
             Spacer(modifier = Modifier.height(16.dp))
@@ -124,9 +154,12 @@ fun EditScreen(viewModel: MainViewModel) {
             OutlinedTextField(value = client.passportIssuedBy,
                 onValueChange = viewModel::onPassportIssuedByChanged,
                 isError = errors.passportIssuedByError != null,
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Words, keyboardType = KeyboardType.Text
+                ),
                 label = {
                     Text(
-                        text = errors.passportIssuedByError.orEmpty()
+                        color = Color.Red, text = errors.passportIssuedByError.orEmpty()
                     )
                 })
             Spacer(modifier = Modifier.height(16.dp))
@@ -134,9 +167,12 @@ fun EditScreen(viewModel: MainViewModel) {
             OutlinedTextField(value = client.passportIssueDate,
                 onValueChange = viewModel::onPassportIssuedDateChanged,
                 isError = errors.passportIssueDateError != null,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text
+                ),
                 label = {
                     Text(
-                        text = errors.passportIssueDateError.orEmpty()
+                        color = Color.Red, text = errors.passportIssueDateError.orEmpty()
                     )
                 })
             Spacer(modifier = Modifier.height(16.dp))
@@ -144,9 +180,13 @@ fun EditScreen(viewModel: MainViewModel) {
             OutlinedTextField(value = client.identificationNumber,
                 onValueChange = viewModel::onIndentificationNumberChanged,
                 isError = errors.identificationNumberError != null,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    capitalization = KeyboardCapitalization.Characters
+                ),
                 label = {
                     Text(
-                        text = errors.identificationNumberError.orEmpty()
+                        color = Color.Red, text = errors.identificationNumberError.orEmpty()
                     )
                 })
             Spacer(modifier = Modifier.height(16.dp))
@@ -154,13 +194,16 @@ fun EditScreen(viewModel: MainViewModel) {
             OutlinedTextField(value = client.birthPlace,
                 onValueChange = viewModel::onBirthPlaceChanged,
                 isError = errors.birthPlaceError != null,
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Words, keyboardType = KeyboardType.Text
+                ),
                 label = {
                     Text(
-                        text = errors.birthPlaceError.orEmpty()
+                        color = Color.Red, text = errors.birthPlaceError.orEmpty()
                     )
                 })
             Spacer(modifier = Modifier.height(16.dp))
-            var isCityExpanded = false
+            var isCityExpanded by remember { mutableStateOf(false) }
             Text("Город проживания", style = MaterialTheme.typography.h6)
             ExposedDropdownMenuBox(expanded = isCityExpanded, onExpandedChange = {
                 isCityExpanded = !isCityExpanded
@@ -199,9 +242,38 @@ fun EditScreen(viewModel: MainViewModel) {
             OutlinedTextField(value = client.address,
                 onValueChange = viewModel::onAddressChanged,
                 isError = errors.addressError != null,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text
+                ),
                 label = {
                     Text(
-                        text = errors.addressError.orEmpty()
+                        color = Color.Red, text = errors.addressError.orEmpty()
+                    )
+                })
+            Text("Домашний номер", style = MaterialTheme.typography.h6)
+            OutlinedTextField(value = client.homeNumber.orEmpty(),
+                onValueChange = viewModel::onHomeNumberChanged,
+                isError = errors.homeNumberError != null,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Phone
+                ),
+                visualTransformation = MaskTransformation(),
+                label = {
+                    Text(
+                        color = Color.Red, text = errors.homeNumberError.orEmpty()
+                    )
+                })
+            Text("Мобильный номер", style = MaterialTheme.typography.h6)
+            OutlinedTextField(value = client.mobileNumber.orEmpty(),
+                onValueChange = viewModel::onMobileNumberChanged,
+                isError = errors.mobileNumberError != null,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Phone
+                ),
+                visualTransformation = MaskTransformation(),
+                label = {
+                    Text(
+                        color = Color.Red, text = errors.mobileNumberError.orEmpty()
                     )
                 })
             Spacer(modifier = Modifier.height(16.dp))
@@ -209,9 +281,12 @@ fun EditScreen(viewModel: MainViewModel) {
             OutlinedTextField(value = client.email.orEmpty(),
                 onValueChange = viewModel::onEmailChanged,
                 isError = errors.emailError != null,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email
+                ),
                 label = {
                     Text(
-                        text = errors.emailError.orEmpty()
+                        color = Color.Red, text = errors.emailError.orEmpty()
                     )
                 })
             Spacer(modifier = Modifier.height(16.dp))
@@ -219,9 +294,12 @@ fun EditScreen(viewModel: MainViewModel) {
             OutlinedTextField(value = client.workplace.orEmpty(),
                 onValueChange = viewModel::onWorkplaceChanged,
                 isError = errors.workplaceError != null,
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Words, keyboardType = KeyboardType.Text
+                ),
                 label = {
                     Text(
-                        text = errors.workplaceError.orEmpty()
+                        color = Color.Red, text = errors.workplaceError.orEmpty()
                     )
                 })
             Spacer(modifier = Modifier.height(16.dp))
@@ -229,9 +307,12 @@ fun EditScreen(viewModel: MainViewModel) {
             OutlinedTextField(value = client.position.orEmpty(),
                 onValueChange = viewModel::onPositionChanged,
                 isError = errors.positionError != null,
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Words, keyboardType = KeyboardType.Text
+                ),
                 label = {
                     Text(
-                        text = errors.positionError.orEmpty()
+                        color = Color.Red, text = errors.positionError.orEmpty()
                     )
                 })
 
@@ -389,9 +470,12 @@ fun EditScreen(viewModel: MainViewModel) {
             OutlinedTextField(value = client.income.orEmpty(),
                 onValueChange = viewModel::onIncomeChanged,
                 isError = errors.incomeError != null,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text
+                ),
                 label = {
                     Text(
-                        text = errors.incomeError.orEmpty()
+                        color = Color.Red, text = errors.incomeError.orEmpty()
                     )
                 })
             Spacer(modifier = Modifier.height(16.dp))
@@ -407,4 +491,62 @@ fun EditScreen(viewModel: MainViewModel) {
             }
         }
     }
+}
+
+class MaskTransformation() : VisualTransformation {
+    override fun filter(text: AnnotatedString): TransformedText {
+        return maskFilter(text)
+    }
+}
+
+
+fun maskFilter(text: AnnotatedString): TransformedText {
+
+    // +375 (29) 319-03-65
+    val trimmed = if (text.text.length >= 13) text.text.substring(0..12) else text.text
+    var out = ""
+//    for (i in trimmed.indices) {
+//        out += trimmed[i]
+//        if (i==4) out += "-"
+        out += text.getOrNull(0) ?: "+"
+        out += text.getOrNull(1) ?: " "
+        out += text.getOrNull(2) ?: " "
+        out += text.getOrNull(3) ?: " "
+        out += " "
+        out += "("
+        out += text.getOrNull(4) ?: " "
+        out += text.getOrNull(5) ?: " "
+        out += ")"
+        out += " "
+        out += text.getOrNull(6) ?: " "
+        out += text.getOrNull(7) ?: " "
+        out += text.getOrNull(8) ?: " "
+        out += "-"
+        out += text.getOrNull(9) ?: " "
+        out += text.getOrNull(10) ?: " "
+        out += "-"
+        out += text.getOrNull(11) ?: " "
+        out += text.getOrNull(12) ?: " "
+//    }
+
+    val numberOffsetTranslator = object : OffsetMapping {
+        override fun originalToTransformed(offset: Int): Int {
+            if (offset <= 4) return offset
+            if (offset <= 6) return offset + 2
+            if (offset <= 9) return offset + 4
+            if (offset <= 11) return offset + 5
+            return 19
+
+        }
+
+        override fun transformedToOriginal(offset: Int): Int {
+            if (offset <= 4) return offset
+            if (offset <= 6) return offset - 2
+            if (offset <= 9) return offset - 4
+            if (offset <= 11) return offset - 5
+            return 12
+        }
+    }
+
+    return TransformedText(AnnotatedString(out), numberOffsetTranslator)
 }

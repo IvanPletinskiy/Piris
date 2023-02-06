@@ -2,8 +2,10 @@ package com.handen.piris
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Checkbox
@@ -41,6 +43,9 @@ fun InfoScreen(viewModel: MainViewModel) {
             Modifier
                 .verticalScroll(rememberScrollState())
                 .padding(it)
+                .padding(4.dp)
+                .wrapContentHeight()
+                .fillMaxWidth()
         ) {
             val client = viewModel.client.collectAsState().value
             val errors = viewModel.uiErrors.collectAsState().value
