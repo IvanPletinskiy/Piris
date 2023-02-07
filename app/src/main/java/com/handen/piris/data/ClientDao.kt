@@ -23,4 +23,19 @@ interface ClientDao {
 
     @Delete(entity = Client::class)
     suspend fun deleteClient(client: Client)
+
+    @Query("SELECT * FROM accounts")
+    fun getAccounts(): Flow<List<Account>>
+
+    @Insert
+    suspend fun insertAccount(account: Account)
+
+    @Insert
+    suspend fun insertDeposit(deposit: Deposit)
+
+    @Query("SELECT * FROM deposits")
+    suspend fun getDeposits(): List<Deposit>
+
+    @Query("UPDATE accounts SET balance=:balance WHERE id = :accountId")
+    suspend fun updateBalance(accountId: Int, balance: Double)
 }

@@ -61,12 +61,20 @@ fun MainScreen(viewModel: MainViewModel) {
             }) {
                 Text(text = "Добавить клиента")
             }
+            Button(onClick = {
+                navController.navigate("create_deposit")
+            }) {
+                Text(text = "Открыть депозит")
+            }
         }
 
         val clients by viewModel.clients.collectAsState(emptyList())
         LazyColumn(Modifier.fillMaxSize()) {
             items(clients) { client ->
-                Box(Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp)) {
                     Card() {
                         Row(Modifier.padding(4.dp)) {
                             Column(Modifier.weight(1f)) {

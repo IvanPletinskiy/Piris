@@ -15,6 +15,16 @@ interface ClientRepository {
     suspend fun insertClient(client: Client)
 
     suspend fun deleteClient(client: Client)
+
+    fun getAccounts(): Flow<List<Account>>
+
+    suspend fun insertAccount(account: Account)
+
+    suspend fun insertDeposit(deposit: Deposit)
+
+    suspend fun getDeposits(): List<Deposit>
+
+    suspend fun updateBalance(accountId: Int, balance: Double)
 }
 
 class ClientRepositoryImpl(private val clientDao: ClientDao) : ClientRepository {
@@ -36,5 +46,25 @@ class ClientRepositoryImpl(private val clientDao: ClientDao) : ClientRepository 
 
     override suspend fun deleteClient(client: Client) {
         return clientDao.deleteClient(client)
+    }
+
+    override fun getAccounts(): Flow<List<Account>> {
+        return clientDao.getAccounts()
+    }
+
+    override suspend fun insertAccount(account: Account) {
+        return clientDao.insertAccount(account)
+    }
+
+    override suspend fun insertDeposit(deposit: Deposit) {
+        clientDao.insertDeposit(deposit)
+    }
+
+    override suspend fun getDeposits(): List<Deposit> {
+        return clientDao.getDeposits()
+    }
+
+    override suspend fun updateBalance(accountId: Int, balance: Double) {
+        clientDao.updateBalance(accountId, balance)
     }
 }

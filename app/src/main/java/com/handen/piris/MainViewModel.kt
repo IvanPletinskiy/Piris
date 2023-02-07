@@ -44,10 +44,10 @@ class MainViewModel() : ViewModel() {
             super.onDestructiveMigration(db)
         }
     }
-
-    private val db: AppDatabase =
-        Room.databaseBuilder(context, AppDatabase::class.java, "piris_database")
+    init {
+        db = Room.databaseBuilder(context, AppDatabase::class.java, "piris_database")
             .addCallback(databaseCallback).build()
+    }
 
     private val repository: ClientRepository = ClientRepositoryImpl(db.clientDao)
 
@@ -601,9 +601,10 @@ class MainViewModel() : ViewModel() {
     }
 
     companion object {
-        private const val FIELD_CANNOT_BE_EMPTY = "Поле не может быть пустым"
-        private const val INVALID_DATE = "Введена некоррентная дата"
-        private val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale("ru", "RU"))
+        const val FIELD_CANNOT_BE_EMPTY = "Поле не может быть пустым"
+        const val INVALID_DATE = "Введена некоррентная дата"
+        val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale("ru", "RU"))
+        lateinit var db: AppDatabase
     }
 }
 

@@ -21,6 +21,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.handen.piris.accounts.AccountsScreen
 import com.handen.piris.ui.theme.PirisTheme
 import kotlinx.coroutines.launch
 
@@ -29,6 +30,7 @@ class MainActivity : ComponentActivity() {
         context = this
         super.onCreate(savedInstanceState)
         val viewModel: MainViewModel by viewModels()
+
         setContent {
             setContent {
                 Surface(modifier = Modifier.fillMaxSize()) {
@@ -44,7 +46,8 @@ class MainActivity : ComponentActivity() {
                                     when (it) {
                                         is MainViewModel.UiEvent.NavigateBack -> navController.popBackStack()
                                         is MainViewModel.UiEvent.Toast -> {
-                                            Toast.makeText(context, it.string, Toast.LENGTH_LONG).show()
+                                            Toast.makeText(context, it.string, Toast.LENGTH_LONG)
+                                                .show()
                                         }
                                     }
                                 }
@@ -62,6 +65,12 @@ class MainActivity : ComponentActivity() {
                                 }
                                 composable("info") {
                                     InfoScreen(viewModel)
+                                }
+                                composable("create_deposit") {
+                                    CreateDepositScreen(viewModel)
+                                }
+                                composable("accounts") {
+                                    AccountsScreen(viewModel)
                                 }
                             }
                         }

@@ -62,3 +62,33 @@ data class Disability(
     @PrimaryKey val id: Int,
     val name: String
 )
+
+
+@Entity(tableName = "accounts")
+data class Account(
+    @PrimaryKey(autoGenerate = true) val id: Int,
+    val number: String,
+    val currency: String,
+//    val currencyCode: String, // USD 840, EUR 978, BYN 933
+    val balance: Double,
+    val clientId: Int
+)
+
+@Entity(tableName = "deposits")
+data class Deposit(
+    @PrimaryKey(autoGenerate = true) val id: Int,
+    val yield: Float = 0f,
+    val amount: String = "",
+    val sourceAccountId: Int = 0,
+    val yieldAccountId: Int = 0,
+    val type: DepositType = DepositType.REVOCABLE,
+    val startDate: String = "",
+    val endDate: String = "",
+    val agreementNumber: String = "",
+    val currencyCode: String = "",
+    val clientId: Int = 0
+)
+
+enum class DepositType(val displayName: String) {
+    REVOCABLE("Отзывный"), NON_REVOCABLE("Безотзывный")
+}
