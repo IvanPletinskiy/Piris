@@ -463,27 +463,27 @@ class MainViewModel() : ViewModel() {
             val client = client.value
             val isEditing = clients.any { it.id == client.id }
             val notExistingName = clients.all {
-                it.name + it.surname + it.patronymic != client.name + client.surname + client.patronymic
+                it.id != client.id && it.name + it.surname + it.patronymic != client.name + client.surname + client.patronymic
             }
             val notExistingPassport = clients.all {
-                "${it.passportNumber}${it.passportSeries}" != "${client.passportNumber}${client.passportSeries}"
+                it.id != client.id && "${it.passportNumber}${it.passportSeries}" != "${client.passportNumber}${client.passportSeries}"
             }
             val notExistingIdentificationNumber = clients.all {
-                it.identificationNumber != client.identificationNumber
+                it.id != client.id && it.identificationNumber != client.identificationNumber
             }
             when {
-                isEditing -> {
-                    if (checkNoErrors()) {
-                        if (clients.any { it.id == client.id }) {
-                            repository.updateClient(client)
-                        } else {
-                            repository.insertClient(client)
-                        }
-                        uiEvents.emit(UiEvent.NavigateBack)
-                    } else {
-                        uiEvents.emit(UiEvent.Toast("Исправьте ошибки заполнения полей"))
-                    }
-                }
+//                isEditing -> {
+//                    if (checkNoErrors()) {
+//                        if (clients.any { it.id == client.id }) {
+//                            repository.updateClient(client)
+//                        } else {
+//                            repository.insertClient(client)
+//                        }
+//                        uiEvents.emit(UiEvent.NavigateBack)
+//                    } else {
+//                        uiEvents.emit(UiEvent.Toast("Исправьте ошибки заполнения полей"))
+//                    }
+//                }
                 !notExistingName -> uiEvents.emit(UiEvent.Toast("Клиент с таким именем уже существует"))
                 !notExistingPassport -> uiEvents.emit(UiEvent.Toast("Клиент с таким паспортом уже существует"))
                 !notExistingIdentificationNumber -> uiEvents.emit(UiEvent.Toast("Клиент с таким идентификационным номером уже существует"))
