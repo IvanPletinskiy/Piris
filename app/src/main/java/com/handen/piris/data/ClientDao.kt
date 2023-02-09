@@ -28,7 +28,7 @@ interface ClientDao {
     fun getAccounts(): Flow<List<Account>>
 
     @Insert
-    suspend fun insertAccount(account: Account)
+    suspend fun insertAccount(account: Account): Long
 
     @Insert
     suspend fun insertDeposit(deposit: Deposit)

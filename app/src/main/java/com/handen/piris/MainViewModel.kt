@@ -5,12 +5,15 @@ import androidx.lifecycle.viewModelScope
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.handen.piris.data.Account
 import com.handen.piris.data.AppDatabase
 import com.handen.piris.data.Citizenship
 import com.handen.piris.data.City
 import com.handen.piris.data.Client
 import com.handen.piris.data.ClientRepository
 import com.handen.piris.data.ClientRepositoryImpl
+import com.handen.piris.data.Deposit
+import com.handen.piris.data.DepositType
 import com.handen.piris.data.Disability
 import com.handen.piris.data.MarriageStatus
 import java.time.LocalDate
@@ -33,6 +36,13 @@ class MainViewModel() : ViewModel() {
                 defaultClients.forEach {
                     db.clientDao.insertClient(it)
                 }
+                val bankAccountNumber = 7327_0000_0000_00000.toString()
+                val bankAccountBalance = 100_000_000_000.0
+                val bankAccount =
+                    Account(0, bankAccountNumber, "BYN", bankAccountBalance, clientId = -1)
+                db.clientDao.insertAccount(bankAccount)
+                insertFirstDeposit()
+                insertSecondDeposit()
             }
         }
 
@@ -44,6 +54,63 @@ class MainViewModel() : ViewModel() {
             super.onDestructiveMigration(db)
         }
     }
+
+    private suspend fun insertFirstDeposit() {
+        val firstMainAccountNumber = 3014_0000_0000_00001.toString()
+        val firstMainAccount = Account(
+            0, firstMainAccountNumber, "USD", 1000.0, 1
+        )
+        db.clientDao.insertAccount(firstMainAccount)
+        val firstInterestAccountNumber = 3014_0000_0000_00002.toString()
+        val firstInterestAccount = Account(
+            0, firstInterestAccountNumber, "USD", 0.0, 1
+        )
+        db.clientDao.insertAccount(firstInterestAccount)
+        val firstDeposit = Deposit(
+            0,
+            0.1f,
+            "",
+            "1000",
+            2,
+            3,
+            type = DepositType.REVOCABLE,
+            startDate = "08 февраля 2023",
+            endDate = "09 апреля 2023",
+            agreementNumber = "1234",
+            currencyCode = "USD",
+            clientId = 1
+        )
+        db.clientDao.insertDeposit(firstDeposit)
+    }
+
+    private suspend fun insertSecondDeposit() {
+        val firstMainAccountNumber = 3014_0000_0000_00003.toString()
+        val firstMainAccount = Account(
+            0, firstMainAccountNumber, "USD", 1000.0, 2
+        )
+        db.clientDao.insertAccount(firstMainAccount)
+        val firstInterestAccountNumber = 3014_0000_0000_00004.toString()
+        val firstInterestAccount = Account(
+            0, firstInterestAccountNumber, "USD", 0.0, 2
+        )
+        db.clientDao.insertAccount(firstInterestAccount)
+        val firstDeposit = Deposit(
+            0,
+            0.1f,
+            "",
+            "1000",
+            4,
+            5,
+            type = DepositType.NON_REVOCABLE,
+            startDate = "08 февраля 2023",
+            endDate = "09 апреля 2023",
+            agreementNumber = "1234",
+            currencyCode = "USD",
+            clientId = 2
+        )
+        db.clientDao.insertDeposit(firstDeposit)
+    }
+
     init {
         db = Room.databaseBuilder(context, AppDatabase::class.java, "piris_database")
             .addCallback(databaseCallback).build()
@@ -603,7 +670,7 @@ class MainViewModel() : ViewModel() {
     companion object {
         const val FIELD_CANNOT_BE_EMPTY = "Поле не может быть пустым"
         const val INVALID_DATE = "Введена некоррентная дата"
-        val dateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale("ru", "RU"))
+        val dateFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale("ru", "RU"))
         lateinit var db: AppDatabase
     }
 }

@@ -61,10 +61,11 @@ fun MainScreen(viewModel: MainViewModel) {
             }) {
                 Text(text = "Добавить клиента")
             }
+            Spacer(modifier = Modifier.width(8.dp))
             Button(onClick = {
-                navController.navigate("create_deposit")
+                navController.navigate("accounts")
             }) {
-                Text(text = "Открыть депозит")
+                Text(text = "Счета")
             }
         }
 

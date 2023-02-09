@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.handen.piris.LocalNavController
 import com.handen.piris.MainViewModel
 
 @Composable
@@ -35,13 +36,23 @@ fun AccountsScreen(mainViewModel: MainViewModel) {
     val accounts by viewModel.accountsUi.collectAsState()
     val currentDate by viewModel.currentDate.collectAsState()
     Column(Modifier.fillMaxSize()) {
-        Text(text = MainViewModel.dateFormatter.format(currentDate), style = MaterialTheme.typography.h6)
+        Text(
+            text = "Текущая дата: ${MainViewModel.dateFormatter.format(currentDate)}",
+            style = MaterialTheme.typography.h6
+        )
         Row(
             Modifier
                 .horizontalScroll(rememberScrollState())
                 .fillMaxWidth()
                 .padding(4.dp)
         ) {
+            val navController = LocalNavController.current
+            Button(onClick = {
+                navController.navigate("create_deposit")
+            }) {
+                Text(text = "Открыть депозит")
+            }
+            Spacer(modifier = Modifier.width(8.dp))
             Button(onClick = {
                 viewModel.skip30Days()
             }) {
@@ -73,7 +84,7 @@ fun AccountsScreen(mainViewModel: MainViewModel) {
                                     .fillMaxHeight()
                                     .weight(1f),
                                 style = MaterialTheme.typography.h6,
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Right
                             )
                         }
                     }

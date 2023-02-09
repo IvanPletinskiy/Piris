@@ -62,7 +62,14 @@ class CreateDepositViewModel : ViewModel() {
     }
 
     fun onYieldChanged(yield: String) {
-        deposit.update { it.copy(yield = (yield.toInt().toFloat() / 100)) }
+        if (yield.isNotBlank()) {
+            deposit.update { it.copy(yieldString = yield) }
+            try {
+                deposit.update { it.copy(yield = (yield.toInt().toFloat() / 100)) }
+            } catch (e: Exception) {
+                uiErrors.update { it.copy(yieldError = "Введите положительное число") }
+            }
+        }
         if (deposit.value.yield <= 0) {
             uiErrors.update { it.copy(yieldError = "Процент должен быть положительным") }
         } else {
@@ -141,12 +148,14 @@ class CreateDepositViewModel : ViewModel() {
                 deposit.amount.toDouble(),
                 deposit.clientId
             )
-            repository.insertAccount(mainAccount)
+            val mainAccountId = repository.insertAccount(mainAccount)
             val interestAccountNumber = 3014_0000_0000_00001 + totalAccounts
             val interestAccount = Account(
                 0, interestAccountNumber.toString(), deposit.currencyCode, 0.0, deposit.clientId
             )
-            repository.insertAccount(interestAccount)
+            val interestAccountId = repository.insertAccount(interestAccount)
+            deposit.sourceAccountId = mainAccountId
+            deposit.yieldAccountId = interestAccountId
             repository.insertDeposit(deposit)
             true
         } else {

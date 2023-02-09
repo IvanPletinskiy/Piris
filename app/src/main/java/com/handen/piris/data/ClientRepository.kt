@@ -18,7 +18,7 @@ interface ClientRepository {
 
     fun getAccounts(): Flow<List<Account>>
 
-    suspend fun insertAccount(account: Account)
+    suspend fun insertAccount(account: Account): Int
 
     suspend fun insertDeposit(deposit: Deposit)
 
@@ -52,8 +52,8 @@ class ClientRepositoryImpl(private val clientDao: ClientDao) : ClientRepository 
         return clientDao.getAccounts()
     }
 
-    override suspend fun insertAccount(account: Account) {
-        return clientDao.insertAccount(account)
+    override suspend fun insertAccount(account: Account): Int {
+        return clientDao.insertAccount(account).toInt()
     }
 
     override suspend fun insertDeposit(deposit: Deposit) {

@@ -6,6 +6,7 @@ import com.handen.piris.MainViewModel
 import com.handen.piris.data.ClientRepository
 import com.handen.piris.data.ClientRepositoryImpl
 import com.handen.piris.data.DepositType
+import java.text.DecimalFormat
 import java.time.LocalDate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
@@ -23,9 +24,15 @@ class AccountsViewModel : ViewModel() {
             repository.getAccounts().collect() {
                 val clients = repository.getClients().first()
                 accountsUi.value = it.map { account ->
-                    val client = clients.first { it.id == account.id }
-                    val owner = "${client.name} ${client.surname} ${client.patronymic}"
-                    val amount = "${account.balance} ${account.currency}"
+                    val client = clients.firstOrNull { it.id == account.clientId }
+                    val owner = if (client != null ) {
+                        "${client.name} ${client.surname} ${client.patronymic}"
+                    } else {
+                        "Технобанк"
+                    }
+                    val format = DecimalFormat("#.##")
+
+                    val amount = "${format.format(account.balance)} ${account.currency}"
                     UiAccount(account.id, account.number, owner, amount)
                 }
             }
@@ -39,13 +46,16 @@ class AccountsViewModel : ViewModel() {
 
         val deposits = repository.getDeposits()
         deposits.forEach { deposit ->
-            val endDate = MainViewModel.dateFormatter.parse(deposit.endDate) as LocalDate
             if (deposit.type == DepositType.NON_REVOCABLE) {
+                val endDate = LocalDate.from(MainViewModel.dateFormatter.parse(deposit.endDate)).minusDays(1)
                 if (endDate.isAfter(oldDate) && endDate.isBefore(newDate)) {
-                    val interest = deposit.amount.toDouble() * deposit.yield / 12
+                    val startDate = LocalDate.from(MainViewModel.dateFormatter.parse(deposit.startDate))
+                    val monthCount = endDate.monthValue - startDate.monthValue
+                    val interest = deposit.amount.toDouble() * deposit.yield / 12 * monthCount
                     repository.updateBalance(deposit.yieldAccountId, interest)
                 }
             } else {
+                val endDate = LocalDate.from(MainViewModel.dateFormatter.parse(deposit.endDate)).plusDays(1)
                 if (newDate.isBefore(endDate)) {
                     val interest = deposit.amount.toDouble() * deposit.yield / 12
                     val accounts = repository.getAccounts().first()

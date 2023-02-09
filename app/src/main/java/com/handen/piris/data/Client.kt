@@ -63,7 +63,6 @@ data class Disability(
     val name: String
 )
 
-
 @Entity(tableName = "accounts")
 data class Account(
     @PrimaryKey(autoGenerate = true) val id: Int,
@@ -71,16 +70,17 @@ data class Account(
     val currency: String,
 //    val currencyCode: String, // USD 840, EUR 978, BYN 933
     val balance: Double,
-    val clientId: Int
+    val clientId: Int = 0
 )
 
 @Entity(tableName = "deposits")
 data class Deposit(
     @PrimaryKey(autoGenerate = true) val id: Int,
     val yield: Float = 0f,
+    val yieldString: String = "",
     val amount: String = "",
-    val sourceAccountId: Int = 0,
-    val yieldAccountId: Int = 0,
+    var sourceAccountId: Int = 0,
+    var yieldAccountId: Int = 0,
     val type: DepositType = DepositType.REVOCABLE,
     val startDate: String = "",
     val endDate: String = "",
